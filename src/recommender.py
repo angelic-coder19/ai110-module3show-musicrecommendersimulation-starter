@@ -1,5 +1,7 @@
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
+import csv
+from pathlib import Path
 
 @dataclass
 class Song:
@@ -50,9 +52,37 @@ def load_songs(csv_path: str) -> List[Dict]:
     Loads songs from a CSV file.
     Required by src/main.py
     """
-    # TODO: Implement CSV loading logic
+    songs: List[Dict] = []
+
     print(f"Loading songs from {csv_path}...")
-    return []
+    path = Path(csv_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Songs CSV not found: {csv_path}")
+
+    with path.open(newline='', encoding='utf-8') as fh:
+        reader = csv.DictReader(fh)
+        for row in reader:
+            # Normalize and convert types
+            try:
+                song = {
+                    'id': int(row.get('id', '').strip()) if row.get('id') is not None and row.get('id').strip() != '' else None,
+                    'title': row.get('title', '').strip(),
+                    'artist': row.get('artist', '').strip(),
+                    'genre': row.get('genre', '').strip(),
+                    'mood': row.get('mood', '').strip(),
+                    'energy': float(row.get('energy', 0.0)) if row.get('energy') not in (None, '') else 0.0,
+                    'tempo_bpm': float(row.get('tempo_bpm', 0.0)) if row.get('tempo_bpm') not in (None, '') else 0.0,
+                    'valence': float(row.get('valence', 0.0)) if row.get('valence') not in (None, '') else 0.0,
+                    'danceability': float(row.get('danceability', 0.0)) if row.get('danceability') not in (None, '') else 0.0,
+                    'acousticness': float(row.get('acousticness', 0.0)) if row.get('acousticness') not in (None, '') else 0.0,
+                }
+            except ValueError:
+                # Skip rows with bad numeric values
+                continue
+
+            songs.append(song)
+
+    return songs
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """
