@@ -23,9 +23,20 @@ Some prompts to answer:
 
 - What features does each `Song` use in your system
   - For example: genre, mood, energy, tempo
+
+  My system uses the energy, mood, genre, accousticness and valency features of each song.
+
 - What information does your `UserProfile` store
+
+  My `UserProfile` stores the favorite genre, mood (as strings), target energy (as a float) and a boolean for whether the user prefers acoustic songs.
+
 - How does your `Recommender` compute a score for each song
+
+  Recommender computes a score for each song by finding the weighted sum of the features wich are all in the range of 0 to 1. This means that the score will also be in the range of 0 to 1. Each feature has a different weight, for example genre has a weight of 0.20, mood has a weight of 0.35, energy has a weight of 0.25, acousticness has a weight of 0.12 and valence has a weight of 0.08
+
 - How do you choose which songs to recommend
+
+The songs with the highest scores are the ones that are recommended. The number of songs recommended can be set by the user, but by default it is 3.
 
 You can include a simple diagram or bullet list if helpful.
 
