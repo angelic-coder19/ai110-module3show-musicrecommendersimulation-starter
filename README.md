@@ -1,5 +1,7 @@
 # 🎵 Music Recommender Simulation
 
+![Demo image](image.png)
+
 ## Project Summary
 
 In this project you will build and explain a small music recommender system.
@@ -163,10 +165,66 @@ Combines reflection and model card framing from the Module 3 guidance. :contentR
 
 ## 5. Strengths
 - User types for which it gives reasonable results
-  It gives reasonable results for users with clear preferences for genre, mood, and energy. For example, a user who prefers "Happy" mood, "Pop" genre, and high energy will get appropriate recommendations.
+    It gives reasonable results for users with clear preferences for genre, mood, and energy. For example, a user who prefers "Happy" mood, "Pop" genre, and high energy will get appropriate recommendations.
 - Any patterns you think your scoring captures correctly
-  The scoring captures that mood is a strong signal and that energy helps tell songs apart within the same genre. Acousticness is also useful for users who prefer organic sounds.
-- Cases where the recommendations matched your intuition
-  For a user preferring a relaxed mood, jazz genre, and low energy, the model returned relaxed jazz tracks that felt appropriate.
-- How many songs are in `data/songs.csv`
+    The scoring captures that mood is a strong signal and that energy helps tell songs apart within the same genre. Acousticness is also useful for users who prefer organic sounds.
 
+- Cases where the recommendations matched your intuition
+    For a user preferring a relaxed mood, jazz genre, and low energy, the model returned relaxed jazz tracks that felt appropriate.
+- How many songs are in `data/songs.csv`
+    There are 20 songs in `data/songs.csv`.
+## 6. Limitations and Bias
+
+Where does your recommender struggle
+
+Some prompts:
+- Does it ignore some genres or moods
+- Does it treat all users as if they have the same taste shape
+- Is it biased toward high energy or one genre by default
+- How could this be unfair if used in a real product
+
+---
+
+## 7. Evaluation
+
+How did you check your system
+
+Examples:
+- I tried multiple user profiles (Late night study "Lo-fi", High-Energy Pop, and Deep Intense Rock) wrote down whether the results matched your expectations
+  RESULTS: 
+  
+  High-Energy Pop:
+  ![High-energy pop recommendations](image-1.png)
+
+  Late night study "Lo-fi":
+  ![Lo-fi recommendations](image-2.png)
+
+  Deep Intense Rock:
+  ![Deep intense rock recommendations](image.png)
+
+- I wrote tests for your scoring logic to check that it behaves as expected when I change the user profile or song features.
+
+You do not need a numeric metric, but if you used one, explain what it measures.
+
+---
+
+## 8. Future Work
+
+If you had more time, how would you improve this recommender 
+ If I had more time, I would add other features to the recommender such as the lyrics, the language of the song, and the popularity of the song. I would also consider using a more complex model that can capture interactions between features, such as a decision tree or a neural network. Additionally, I would like to expand the catalog to include more songs and more diverse genres and moods to better serve users with different tastes.
+
+---
+
+## 9. Personal Reflection
+
+A few sentences about what you learned:
+
+- What surprised you about how your system behaved
+  At first I was surprised that the model was able to capture some of the nuances of musical taste with such a simple scoring system. I expected it to be more rigid and less able to provide good recommendations, but it did a decent job for users with clear preferences.
+
+- How did building this change how you think about real music recommenders
+  Building this simple recommender made me appreciate how much work goes into the complex models used by real music streaming services like Spotify or YouTube. It also made me realize that even a simple model can capture some of the key factors that influence musical taste, but that there are many other factors and interactions that real recommenders need to consider to provide good recommendations to a wide range of users.
+
+- Where do you think human judgment still matters, even if the model seems "smart"
+
+    Throughout this project I had to make a lot of subjective decisions about how to design the scoring system, what features to include, and how to weight them. This made me realize that even if a model seems "smart" in terms of its ability to capture patterns in the data, human judgment is still crucial in shaping how the model works and what it prioritizes. For example, deciding that mood should have a higher weight than genre was a subjective choice that influenced the recommendations significantly. In real music recommenders, human judgment is also important in curating the catalog, defining features, and setting goals for what kind of recommendations they want to provide to users.
