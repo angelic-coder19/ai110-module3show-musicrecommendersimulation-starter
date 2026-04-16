@@ -16,6 +16,34 @@ try:
 except Exception:
     from recommender import load_songs, recommend_songs
 
+"""
+USER PREFERENCES
+different tast profiles
+"""
+STUDY_FOCUS =  {
+        "genre":          "lofi",    # preferred genre
+        "mood":           "focused", # preferred mood
+        "energy":         0.42,      # target energy level (calm but not silent)
+        "likes_acoustic": True,      # prefers organic/acoustic texture over produced sound
+        "valence":        0.58,      # moderately positive — not too bright, not melancholic
+    }
+
+HIGH_ENERGY_POP = {
+        "genre":          "pop",    # preferred genre
+        "mood":           "happy", # preferred mood
+        "energy":         0.70,      # target energy level (calm but not silent)
+        "likes_acoustic": False,      # prefers organic/acoustic texture over produced sound
+        "valence":        0.22,      # moderately positive — not too bright, not melancholic
+    }
+
+DEEP_INTENSE_ROCK = {
+        "genre":          "rock",    # preferred genre
+        "mood":           "intense", # preferred mood
+        "energy":         0.90,      # target energy level (calm but not silent)
+        "likes_acoustic": False,      # prefers organic/acoustic texture over produced sound
+        "valence":        0.46,      # moderately positive — not too bright, not melancholic
+    }
+
 
 def main() -> None:
     # Resolve the songs path relative to the project root so this works
@@ -24,24 +52,7 @@ def main() -> None:
     songs_path = project_root / "data" / "songs.csv"
     songs = load_songs(str(songs_path))
 
-    # Taste profile: late-night study session
-    # Someone who wants calm, acoustic-leaning music to focus with
-    """
-    user_prefs = {
-        "genre":          "lofi",    # preferred genre
-        "mood":           "focused", # preferred mood
-        "energy":         0.42,      # target energy level (calm but not silent)
-        "likes_acoustic": True,      # prefers organic/acoustic texture over produced sound
-        "valence":        0.58,      # moderately positive — not too bright, not melancholic
-    }
-    """
-    user_prefs = {
-        "genre":          "pop",    # preferred genre
-        "mood":           "happy", # preferred mood
-        "energy":         0.70,      # target energy level (calm but not silent)
-        "likes_acoustic": False,      # prefers organic/acoustic texture over produced sound
-        "valence":        0.22,      # moderately positive — not too bright, not melancholic
-    }
+    user_prefs = STUDY_FOCUS 
 
 
     recommendations = recommend_songs(user_prefs, songs, k=5)
@@ -52,7 +63,7 @@ def main() -> None:
     acoustic_label = "Yes" if user_prefs["likes_acoustic"] else "No"
 
     print(f"\n{DIV}")
-    print(f"  BEATS BUDDY 1.0  -  Late-night Study Session")
+    print(f"  BEATS BUDDY 1.0")
     print(DIV)
     print()
     print("  Your Taste Profile")
