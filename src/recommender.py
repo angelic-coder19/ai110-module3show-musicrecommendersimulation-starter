@@ -86,11 +86,54 @@ def load_songs(csv_path: str) -> List[Dict]:
 
     return songs
 
+def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
+    """
+    Scores a single song against user preferences.
+    Returns a weighted score in [0.0, 1.0] and a list of human-readable reasons.
+
+    Weights: mood 0.35 | energy 0.25 | genre 0.20 | acousticness 0.12 | valence 0.08
+    """
+    score = 0.0
+    reasons: List[str] = []
+
+    # Mood match (weight: 0.35) — highest weight, strongest intent signal
+    if user_prefs.get("mood") and user_prefs.get("mood") == song.get("mood"):
+        score += 0.35
+        reasons.append("mood match (+0.35)")
+
+    # Energy proximity (weight: 0.25) — how close the song's energy is to the target
+    energy_contribution = (1.0 - abs(user_prefs.get("energy", 0.5) - song.get("energy", 0.5))) * 0.25
+    score += energy_contribution
+    reasons.append(f"energy proximity (+{energy_contribution:.2f})")
+
+    # Genre match (weight: 0.20) — penalized less than mood due to sparse catalog
+    if user_prefs.get("genre") and user_prefs.get("genre") == song.get("genre"):
+        score += 0.20
+        reasons.append("genre match (+0.20)")
+
+    # Acoustic direction score (weight: 0.12) — direction flip based on boolean preference
+    acousticness = song.get("acousticness", 0.5)
+    acoustic_raw = acousticness if user_prefs.get("likes_acoustic", True) else (1.0 - acousticness)
+    acoustic_contribution = acoustic_raw * 0.12
+    score += acoustic_contribution
+    reasons.append(f"acoustic fit (+{acoustic_contribution:.2f})")
+
+    # Valence proximity (weight: 0.08) — emotional positiveness, kept low to avoid mood overlap
+    valence_contribution = (1.0 - abs(user_prefs.get("valence", 0.5) - song.get("valence", 0.5))) * 0.08
+    score += valence_contribution
+    reasons.append(f"valence proximity (+{valence_contribution:.2f})")
+
+    return score, reasons
+
+
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """
-    Functional implementation of the recommendation logic.
+    Ranks all songs using score_song as the judge and returns the top k.
     Required by src/main.py
     """
-    # TODO: Implement scoring and ranking logic
-    # Expected return format: (song_dict, score, explanation)
-    return []
+    scored = sorted(
+        [(song, *score_song(user_prefs, song)) for song in songs],
+        key=lambda item: item[1],
+        reverse=True
+    )
+    return [(song, score, ", ".join(reasons)) for song, score, reasons in scored[:k]]

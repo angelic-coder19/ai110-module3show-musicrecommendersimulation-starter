@@ -26,6 +26,7 @@ def main() -> None:
 
     # Taste profile: late-night study session
     # Someone who wants calm, acoustic-leaning music to focus with
+    """
     user_prefs = {
         "genre":          "lofi",    # preferred genre
         "mood":           "focused", # preferred mood
@@ -33,17 +34,49 @@ def main() -> None:
         "likes_acoustic": True,      # prefers organic/acoustic texture over produced sound
         "valence":        0.58,      # moderately positive — not too bright, not melancholic
     }
+    """
+    user_prefs = {
+        "genre":          "pop",    # preferred genre
+        "mood":           "happy", # preferred mood
+        "energy":         0.70,      # target energy level (calm but not silent)
+        "likes_acoustic": False,      # prefers organic/acoustic texture over produced sound
+        "valence":        0.22,      # moderately positive — not too bright, not melancholic
+    }
+
 
     recommendations = recommend_songs(user_prefs, songs, k=5)
 
-    print("\nTop recommendations:\n")
-    for rec in recommendations:
-        # You decide the structure of each returned item.
-        # A common pattern is: (song, score, explanation)
-        song, score, explanation = rec
-        print(f"{song['title']} - Score: {score:.2f}")
-        print(f"Because: {explanation}")
-        print()
+    # ── Header ────────────────────────────────────────────
+    W = 54
+    DIV = "-" * W
+    acoustic_label = "Yes" if user_prefs["likes_acoustic"] else "No"
+
+    print(f"\n{DIV}")
+    print(f"  BEATS BUDDY 1.0  -  Late-night Study Session")
+    print(DIV)
+    print()
+    print("  Your Taste Profile")
+    print(f"  {'Genre':<10}: {user_prefs['genre']:<14}  {'Acoustic':<10}: {acoustic_label}")
+    print(f"  {'Mood':<10}: {user_prefs['mood']:<14}  {'Valence':<10}: {user_prefs['valence']}")
+    print(f"  {'Energy':<10}: {user_prefs['energy']}")
+    print()
+
+    # ── Results ───────────────────────────────────────────
+    print(DIV)
+    print(f"  Top {len(recommendations)} Recommendations  ({len(songs)} songs scored)")
+    print(DIV)
+
+    for rank, (song, score, explanation) in enumerate(recommendations, start=1):
+        bar = "#" * int(score * 20)
+        print(f"\n  #{rank}  {song['title']}  -  {song['artist']}")
+        print(f"       Score  : {score:.2f}  [{bar:<20}]")
+        print(f"       Genre  : {song['genre']:<12}  Mood : {song['mood']}")
+        print(f"       Why    :", end="")
+        for i, reason in enumerate(explanation.split(", ")):
+            prefix = " " if i == 0 else " " * 15
+            print(f"{prefix}{reason}")
+
+    print(f"\n{DIV}\n")
 
 
 if __name__ == "__main__":
