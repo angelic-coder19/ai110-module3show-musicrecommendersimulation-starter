@@ -30,7 +30,7 @@ STUDY_FOCUS =  {
 
 HIGH_ENERGY_POP = {
         "genre":          "pop",    # preferred genre
-        "mood":           "happy", # preferred mood
+        "mood":           "happy",   # preferred mood
         "energy":         0.70,      # target energy level (calm but not silent)
         "likes_acoustic": False,      # prefers organic/acoustic texture over produced sound
         "valence":        0.22,      # moderately positive — not too bright, not melancholic
