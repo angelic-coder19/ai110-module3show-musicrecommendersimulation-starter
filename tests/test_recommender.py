@@ -1,4 +1,6 @@
-from src.recommender import Song, UserProfile, Recommender
+from pathlib import Path
+
+from src.recommender import Song, UserProfile, Recommender, load_songs
 
 def make_small_recommender() -> Recommender:
     songs = [
@@ -59,3 +61,32 @@ def test_explain_recommendation_returns_non_empty_string():
     explanation = rec.explain_recommendation(user, song)
     assert isinstance(explanation, str)
     assert explanation.strip() != ""
+
+
+def test_load_songs_from_relative_data_path():
+    # Ensure load_songs can read the project's data/songs.csv using a relative path
+    songs = load_songs("data/songs.csv")
+    assert isinstance(songs, list)
+    assert len(songs) > 0
+    first = songs[0]
+    assert isinstance(first, dict)
+    # Verify we parsed a known title from the CSV
+    assert first.get('title') == "Sunrise City"
+
+
+def test_load_songs_from_absolute_path_and_types():
+    # Build an absolute path to the data file based on this test file location
+    csv_path = Path(__file__).resolve().parents[1] / "data" / "songs.csv"
+    songs = load_songs(str(csv_path))
+    assert len(songs) == 10
+    # Verify numeric fields were converted correctly
+    ids = [s['id'] for s in songs if s.get('id') is not None]
+    assert all(isinstance(i, int) for i in ids)
+    assert all(isinstance(s.get('energy'), float) for s in songs)
+
+
+def test_load_songs_missing_file_raises():
+    import pytest
+
+    with pytest.raises(FileNotFoundError):
+        load_songs("this_file_does_not_exist.csv")

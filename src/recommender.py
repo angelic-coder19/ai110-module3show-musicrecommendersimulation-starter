@@ -56,9 +56,11 @@ def load_songs(csv_path: str) -> List[Dict]:
 
     print(f"Loading songs from {csv_path}...")
     path = Path(csv_path)
+    
     if not path.exists():
         raise FileNotFoundError(f"Songs CSV not found: {csv_path}")
-
+    
+        
     with path.open(newline='', encoding='utf-8') as fh:
         reader = csv.DictReader(fh)
         for row in reader:
